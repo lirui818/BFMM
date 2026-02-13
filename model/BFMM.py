@@ -439,15 +439,7 @@ class TCFM(nn.Module):
         out_w = self.conv_w(x_w.permute(0, 3, 1, 2))  # (16,64,64,64) out: b c h w --> b w c h
         
 
-        vector_c = self.krim_c1(out_c) 
-        vector_h = self.krim_h1(out_h)
-        vector_w = self.krim_w1(out_w)
 
-        xx = rearrange(x_in, "b c w h -> b h w c", h=self.h_in, w=self.w_in).contiguous() #(64,64,64)
-        xx = self.layernorm1(xx) # (16,64,64,64) b c w h
-        xx = rearrange(xx, "b h w c -> b (h w) c", h=self.h_in, w=self.w_in).contiguous() # (16,4096,64)
-        xx= self.msa1(xx, (self.w_in, self.h_in)) # (16,4096,64) 这应该是FMJM模块被我删掉了
-        xx = rearrange(xx, "b (h w) c -> b c w h ", h=self.h_in, w=self.w_in).contiguous() #(16,64,64,64)
 
         results = []
         for i in range(b_in):
